@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luyện Tập Từ Vựng & Phát Âm Tiếng Trung</title>
+    <style>
+        :root {
+            --primary-color: #0d5c3a;
+            --secondary-color: #e67e22;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        /* Thẻ từ vựng Grid */
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .vocab-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 5px solid var(--primary-color);
+        }
+
+        .vocab-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .chinese-char {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+
+        .pinyin {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            margin: 0.5rem 0;
+            font-weight: 500;
+        }
+
+        .meaning {
+            font-size: 1rem;
+            color: #7f8c8d;
+            margin: 0 0 1rem 0;
+        }
+
+        .btn-audio {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: background 0.2s;
+        }
+
+        .btn-audio:hover {
+            background-color: #083b25;
+        }
+
+        /* Khu vực quy tắc bổ trợ */
+        .rule-box {
+            background: #edf7f2;
+            border-left: 5px solid var(--primary-color);
+            padding: 1rem 1.5rem;
+            margin-top: 1.5rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .rule-box h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        /* 5 nét cơ bản */
+        .stroke-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stroke-item {
+            background: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            font-weight: bold;
+            border: 1px solid #ddd;
+        }
+
+        /* Khu vực Luyện tập Quiz */
+        .quiz-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            padding: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .quiz-question {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.8rem;
+        }
+
+        @media(min-width: 600px) {
+            .quiz-options {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .option-btn {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background: #e9ecef;
+            border-color: #ced4da;
+        }
+
+        .option-btn.correct {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .option-btn.wrong {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .score-board {
+            margin-top: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .btn-next {
+            margin-top: 1.5rem;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #95a5a6;
+            font-size: 0.9rem;
+            margin-top: 3rem;
+            background: #eaeded;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Học Tiếng Trung Giao Tiếp Cơ Bản</h1>
+        <p>Luyện nghe phát âm chuẩn và ghi nhớ từ vựng qua thẻ tương tác</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- PHẦN 1: TỪ VỰNG & PHÁT ÂM -->
+        <h2 class="section-title">1. Từ Vựng & Phát Âm Chuẩn</h2>
+        <div class="vocab-grid">
+            
+            <div class="vocab-card">
+                <p class="chinese-char">谢谢</p>
+                <p class="pinyin">xièxie</p>
+                <p class="meaning">Cảm ơn</p>
+                <button class="btn-audio" onclick="speak('谢谢')">🔊 Nghe</button>
+            </div>
+
+            <div class="vocab-card">
+                <p class="chinese-char">不</p>
+                <p class="pinyin">bù</p>
+                <p class="meaning">Không (Phó từ)</p>
+                <button class="btn-audio" onclick="speak('不')">🔊 Nghe</button>
+            </div>
+
+            <div class="vocab-card">
+                <p class="chinese-char">不客气</p>
+                <p class="pinyin">bú kèqi</p>
+                <p class="meaning">Đừng khách sáo</p>
+                <button class="btn-audio" onclick="speak('不客气')">🔊 Nghe</button>
+            </div>
+
+            <div class="vocab-card">
+                <p class="chinese-char">再见</p>
+                <p class="pinyin">zài jiàn</p>
+                <p class="meaning">Tạm biệt</p>
+                <button class="btn-audio" onclick="speak('再见')">🔊 Nghe</button>
+            </div>
+
+        </div>
+
+        <!-- PHẦN 2: QUY TẮC PHÁT ÂM -->
+        <h2 class="section-title">2. Chú Ý Biến Điệu Của "不" (bù)</h2>
+        <div class="rule-box">
+            <h3>Quy tắc đổi dấu cần nhớ:</h3>
+            <p>• <strong>不 + Thanh 1, 2, 3</strong> ➔ Giữ nguyên là <strong>bù</strong> (Ví dụ: 不听 bù tīng, 不行 bù xíng).</p>
+            <p>• <strong>不 + Thanh 4</strong> ➔ Biến điệu thành <strong>bú</strong> (Ví dụ: 不对 bú duì, 不谢 bú xiè, 不客气 bú kèqi).</p>
+        </div>
+
+        <!-- PHẦN 3: ÔN TẬP NÉT CHỮ -->
+        <h2 class="section-title">3. Ôn Tập 5 Nét Cơ Bản Của Chữ Hán</h2>
+        <div class="stroke-list">
+            <div class="stroke-item">1. Ngang (一)</div>
+            <div class="stroke-item">2. Sổ (丨)</div>
+            <div class="stroke-item">3. Phẩy (丿)</div>
+            <div class="stroke-item">4. Chấm (丶)</div>
+            <div class="stroke-item">5. Mác (乀)</div>
+        </div>
+
+        <!-- PHẦN 4: TRÒ CHƠI LUYỆN TẬP (QUIZ) -->
+        <h2 class="section-title">4. Trắc Nghiệm Phản Xạ</h2>
+        <div class="quiz-container">
+            <div id="quiz-content">
+                <div class="quiz-question" id="question-text">Đang tải câu hỏi...</div>
+                <div class="quiz-options" id="options-container"></div>
+            </div>
+            <div class="score-board" id="score-text">Điểm số: 0/0</div>
+            <button class="btn-next" id="btn-next" onclick="nextQuestion()">Câu tiếp theo ➔</button>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>© 2026 Giáo Trình Học Tiếng Trung CTI HSK. Thiết kế dành cho học sinh luyện tập trực quan.</p>
+    </footer>
+
+    <script>
+        // --- CHỨC NĂNG PHÁT ÂM (Giọng Trung Quốc chuẩn) ---
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-CN'; // Cài đặt ngôn ngữ tiếng Trung đại lục
+                utterance.rate = 0.85;    // Tốc độ đọc vừa phải cho học sinh nghe rõ
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("Trình duyệt của bạn không hỗ trợ tính năng phát âm tự động.");
+            }
+        }
+
+        // --- DỮ LIỆU CÂU HỎI TRẮC NGHIỆM ---
+        const quizData = [
+            {
+                question: "Khi có người nói '谢谢你！' (Cảm ơn bạn), bạn nên đáp lại như thế nào cho lịch sự?",
+                options: ["A. 对不起 (duìbuqǐ)", "B. 不客气 (bú kèqi)", "C. 再见 (zàijiàn)", "D. 不听 (bù tīng)"],
+                correct: 1
+            },
+            {
+                question: "Từ '不' trong cụm '不对' (bú duì) phát âm là 'bú' (thanh 2) vì lý do gì?",
+                options: ["A. Thích thì đổi dấu thôi", "B. Đứng trước từ mang thanh 1", "C. Đứng trước từ mang thanh 4 nên biến điệu", "D. Luôn luôn phải đọc là 'bú'"],
+                correct: 2
+            },
+            {
+                question: "Từ nào sau đây mang ý nghĩa là 'Tạm biệt'?",
+                options: ["A. 谢谢 (xièxie)", "B. 不谢 (bú xiè)", "C. 不 (bù)", "D. 再见 (zàijiàn)"],
+                correct: 3
+            },
+            {
+                question: "Nét nào sau đây KHÔNG phải là một trong 5 nét cơ bản của chữ Hán bài học hôm nay?",
+                options: ["A. Ngang", "B. Sổ", "C. Gập Vòng", "D. Mác"],
+                correct: 2
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        // --- HÀM TRIỂN KHAI CÂU HỎI ---
+        function loadQuestion() {
+            const currentQuiz = quizData[currentQuestionIndex];
+            const questionText = document.getElementById('question-text');
+            const optionsContainer = document.getElementById('options-container');
+            const btnNext = document.getElementById('btn-next');
+
+            // Reset trạng thái
+            btnNext.style.display = 'none';
+            optionsContainer.innerHTML = '';
+
+            // Hiển thị câu hỏi
+            questionText.innerText = `Câu ${currentQuestionIndex + 1}: ${currentQuiz.question}`;
+
+            // Tạo các nút đáp án
+            currentQuiz.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.innerText = option;
+                button.onclick = () => selectOption(index, button);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function selectOption(selectedIndex, selectedButton) {
+            const currentQuiz = quizData[currentQuestionIndex];
+            const optionsContainer = document.getElementById('options-container');
+            const buttons = optionsContainer.getElementsByClassName('option-btn');
+            const btnNext = document.getElementById('btn-next');
+
+            // Khóa không cho bấm lại các nút khác
+            for (let btn of buttons) {
+                btn.disabled = true;
+            }
+
+            // Kiểm tra đúng sai
+            if (selectedIndex === currentQuiz.correct) {
+                selectedButton.classList.add('correct');
+                score++;
+            } else {
+                selectedButton.classList.add('wrong');
+                // Hiển thị màu xanh cho đáp án đúng để học sinh biết
+                buttons[currentQuiz.correct].classList.add('correct');
+            }
+
+            // Cập nhật điểm số
+            document.getElementById('score-text').innerText = `Điểm số: ${score}/${quizData.length}`;
+            
+            // Hiện nút tiếp theo
+            btnNext.style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                // Kết thúc trò chơi
+                document.getElementById('quiz-content').innerHTML = `
+                    <div style="text-align: center; color: var(--primary-color);">
+                        <h3>🎉 Chúc mừng bạn đã hoàn thành bài luyện tập!</h3>
+                        <p>Tổng số điểm đạt được: <strong>${score} / ${quizData.length}</strong> câu đúng.</p>
+                    </div>
+                `;
+                document.getElementById('btn-next').style.display = 'none';
+            }
+        }
+
+        // Chạy lần đầu tiên khi tải trang
+        window.onload = function() {
+            loadQuestion();
+        };
+    </script>
+</body>
+</html>
